@@ -8,42 +8,48 @@
 
 
     <div class="container mt-5">
-        <div class="col-md-4 offset-4" >
+        <div class="row">
 
 
-            <div class="list-group">
-                {% for task in todo_tasks %}
-                    <div class="mt-3">
+            {% for task in todo_tasks %}
+                <div class="col-md-4 mt-3">
+                    <div class="list-group">
                         <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
-                                <a href="#"><h5 class="mb-1">{{task.goal}}</h5></a>
-                              <small>{{task.created_date}}</small>
+                                <a href="#"><h5 class="mb-1">{{ task.goal }}</h5></a>
+                                <small>{{ task.created_date }}</small>
                             </div>
 
-                            <p class="mb-1">{{task.description}}</p>
+                            <p class="mb-1">{{ task.description }}</p>
                             <p><small>Deadline: {{ task.end_date|date }}</small></p>
-                            <a href="{{ task.id }}/share-task" class="btn btn-warning" style="width: 100%;">Share with</a>
-                            <a href="{{ task.id }}/edit-task" class="btn btn-success" style="width: 100%;">Edit task</a>
-
+                            <a href="{{ task.id }}/share-task" class="btn btn-warning" style="width: 100%;">Share
+                                with
+                            </a>
+                            <a href="{{ task.id }}/edit-task" class="btn btn-success" style="width: 100%;">Edit
+                                task
+                            </a>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
+            {% endfor %}
 
-                {% for shared_task in shared_todo_tasks %}
-                    <div class="mt-3">
+            {% for shared_task in shared_todo_tasks %}
+                <div class="col-md-4 mt-3">
+                    <div class="list-group">
                         <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
-                                <a href="#"><h5 class="mb-1">{{shared_task.goal}}</h5></a>
-                              <small>{{shared_task.created_date}}</small>
+                                <a href="#"><h5 class="mb-1">{{ shared_task.goal }}</h5></a>
+                                <small>{{ shared_task.created_date }}</small>
                             </div>
-                            <p class="mb-1">{{shared_task.description}}</p>
+                            <p class="mb-1">{{ shared_task.description }}</p>
                             <small>Deadline: {{ shared_task.end_date|date }}</small><br>
                             <small>By: {{ shared_task.by_who }}</small><br>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-            <br>
+                </div>
+            {% endfor %}
+
+
         </div>
     </div>
 
