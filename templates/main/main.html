@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt" crossorigin="anonymous">
+    {% block title %} {% endblock title %}
+
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron mt-2">
+                <h1 class="display-4 text-center"><a href="{% url 'homepage' %}">TODO</a></h1>
+
+            <div class="col-sm-12" style="text-align: center">
+                <p class="lead" style="display:inline-block; width: 150px">
+                    <a class="btn btn-primary btn-lg" href="{% url 'signup' %}" role="button">Sign up</a>
+                </p>
+
+            {% if not request.user.is_authenticated %}
+                <p class="lead" style="display: inline-block; width: 150px">
+                    <a class="btn btn-success btn-lg" href="{% url 'login' %}" role="button">Sign in</a>
+                </p>
+            {% endif %}
+
+                {% if request.user.is_authenticated %}
+                    <p class="lead" style="display: inline-block; width: 150px">
+                        <a class="btn btn-danger btn-lg" href="{% url 'logout' %}" role="button">Log out</a>
+                    </p>
+                {% endif %}
+            </div>
+
+            <div style="text-align: center">
+                {% if request.user.is_authenticated %}
+                    <p>
+                        <mark>Logged as: <b>{{ request.user }}</b></mark>
+                    </p>
+
+                    <p>
+                            <a href="{% url 'add_task' %}">Add new TODO task</a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% block content %}
+
+{% endblock content %}
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js" integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P" crossorigin="anonymous"></script>
+</body>
+</html>
