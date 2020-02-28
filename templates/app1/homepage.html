@@ -16,11 +16,11 @@
                     <div class="list-group">
                         <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
-                                <a href="#"><h5 class="mb-1">{{ task.goal }}</h5></a>
+                                <a href="{{ task.id }}/view-task"><h5 class="mb-1">{{ task.goal }}</h5></a>
                                 <small>{{ task.created_date }}</small>
                             </div>
 
-                            <p class="mb-1">{{ task.description }}</p>
+                            <p class="mb-1">{{ task.description|truncatechars:25}}</p>
                             <p><small>Deadline: {{ task.end_date|date }}</small></p>
                             <a href="{{ task.id }}/share-task" class="btn btn-warning" style="width: 100%;">Share
                                 with
@@ -41,9 +41,22 @@
                                 <a href="#"><h5 class="mb-1">{{ shared_task.goal }}</h5></a>
                                 <small>{{ shared_task.created_date }}</small>
                             </div>
-                            <p class="mb-1">{{ shared_task.description }}</p>
+                            <p class="mb-1">{{ shared_task.description|truncatechars:25 }}</p>
                             <small>Deadline: {{ shared_task.end_date|date }}</small><br>
-                            <small>By: {{ shared_task.by_who }}</small><br>
+                            <small><b>By: {{ shared_task.by_who }}</b></small>
+
+                            <a href="#" class="btn btn-warning disabled" style="width: 100%;">Share
+                                with
+                            </a>
+
+                            {% if shared_task in shared_todo_tasks_to_edit %}
+                                <a href="{{ shared_task.id }}/view-task" class="btn btn-success" style="width: 100%;">View detailed</a>
+                            {% else %}
+                                <a href="#" class="btn btn-success disabled" style="width: 100%;">Edit
+                                    task
+                                </a>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

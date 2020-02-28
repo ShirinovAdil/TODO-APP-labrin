@@ -5,32 +5,29 @@ from .forms import RegistrationForm
 
 
 def signup(request):
-    """Basic user registration"""
+    """
+    Basic user registration
+    """
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
+            user = form.save()
             login(request, user)
             return redirect('homepage')
-        else:
-            form = RegistrationForm()
         return render(request, 'accounts/signup.html', {'form': form})
     else:
         form = RegistrationForm()
-    return render(request, 'accounts/signup.html', {'form': form})
+        return render(request, 'accounts/signup.html', {'form': form})
 
 
 def sign_in(request):
-    """Login form"""
+    """
+    Login form
+    """
     if request.method == "POST":
-        form = AuthenticationForm(request=request, data=request.POST)
+        form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=raw_password)
+            user = form.get_user()
             login(request, user)
             return redirect('homepage')
         else:

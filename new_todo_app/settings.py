@@ -39,7 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app1',
     'accounts',
-    
+
+
+    'channels',
+    'channels_redis',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +159,17 @@ EMAIL_HOST_PASSWORD = '12021999'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+
+
+
+# Channels
+ASGI_APPLICATION = 'new_todo_app.routing.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}

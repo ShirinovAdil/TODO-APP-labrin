@@ -1,0 +1,156 @@
+{% extends 'main/main.html' %}
+
+
+
+{% block title %}
+    <title>Task details</title>
+{% endblock title %}
+
+
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+
+            <!-- Task -->
+            <div class="col-md-6 offset-1">
+                <div class="card text-center">
+                    <div class="card-header">
+                        Task by: <b>{{ task.by_who }}</b>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Task:</b> {{ task.goal }}</h5>
+                        <p class="card-text">{{ task.description }}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <p>Created: <b>{{ task.created_date }}</b></p>
+                        <p>Expires on: <b>{{ task.end_date }}</b></p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Comments -->
+            <div class="col-md-5">
+                <h2 class="text-center">Comments:</h2>
+
+                <!-- Initial comment -->
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-header" style="background-color: #e1ecf4">
+                            Comment by: {{ request.user.get_username }}
+                        </div>
+                        <div class="card-body">
+                            {{ leave_comment_form }}
+                            <button id="submit-comment" type="submit" class="btn btn-success" style="align-items: center">Comment</button>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Now
+                        </div>
+                    </div>
+                </form>
+
+            <div id="comments" class="mt-3">
+                <!-- Parse comments from db -->
+                {% for comment in comments %}
+                    <div class="card">
+                        <div class="card-header" style="background-color: #e1ecf4">
+                            Comment by: {{ comment.comment_sender }}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ comment.comment_text }}</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            {{ comment.comment_date }}
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
+<script>
+
+    var task_id = "{{ task.id|escapejs }}";
+
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + task_id + '/view-task');
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        var sender = "{{ request.user }}";
+        console.log("Message received from backend: " + message + '\n');
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = today.getDate() + ' ' + date + ' '+ time;
+        createComment(sender, message, dateTime, data['date_created']);
+    };
+
+    chatSocket.onclose = function(event) {
+      if (event.wasClean) {
+        console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+      } else {
+        // e.g. server process killed or network down
+        // event.code is usually 1006 in this case
+        console.log('[close] Connection died');
+      }
+    };
+
+    chatSocket.onopen = function(e) {
+        console.log('Connected!');
+    };
+
+    chatSocket.onerror = function(error) {
+        console.log(`[error] ${error.message}`);
+    };
+
+    // sends message to backend
+    document.querySelector('#submit-comment').onclick = function(e) {
+        var messageInputDom = document.querySelector('#id_comment_text');
+        var message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'sender' : "{{ request.user }}",
+            'related_task_id': task_id
+        }));
+
+        messageInputDom.value = '';
+    };
+
+
+     function createComment(comment_sender, comment_text, comment_date) {
+        var card = document.createElement('div');
+        card.className = "card";
+
+        var card_header = document.createElement('div');
+        card_header.className = 'card-header';
+        card_header.innerText = 'Comment by: ' + comment_sender;
+        card.appendChild(card_header);
+
+        var card_body = document.createElement('div');
+        card_body.className = 'card-body';
+
+        var card_text = document.createElement('p');
+        card_text.className = 'card-text';
+        card_text.innerText = comment_text;
+        card_body.appendChild(card_text);
+        card.appendChild(card_body);
+
+        var card_footer = document.createElement('div');
+        card_footer.className = 'card-footer text-muted';
+        card_footer.innerText = "Now";
+        card.appendChild(card_footer);
+        document.getElementById('comments').appendChild(card);
+    }
+</script>
+
+{% endblock content %}
