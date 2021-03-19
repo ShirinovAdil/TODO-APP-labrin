@@ -14,7 +14,7 @@ channels-redis==3.2.0
 constantly==15.1.0
 cryptography==3.3.2
 daphne==3.0.1
-Django==3.1.5
+Django==3.1.6
 django-celery==3.3.1
 django-widget-tweaks==1.4.8
 hiredis==1.1.0
