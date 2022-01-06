@@ -7,7 +7,7 @@ attrs==20.3.0
 autobahn==20.12.3
 Automat==20.2.0
 billiard==3.3.0.23
-celery==3.1.26.post2
+celery==5.2.2
 cffi==1.14.4
 channels==3.0.3
 channels-redis==3.2.0
